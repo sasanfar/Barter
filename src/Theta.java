@@ -2,21 +2,22 @@ import java.io.*;
 import java.util.Arrays;
 
 public class Theta {
-
+	int agent;
 	int ID;
-	int t[][];
+	int t[];
 
 	public Theta() {
-		t = new int[Parameters.numberOfAgents][Parameters.numberOfResources];
+		t = new int[Parameters.numberOfResources];
 	}
 
-	public Theta(int id, int[][] x) {
+	public Theta(int id, int agent, int[] x) {
 		ID = id;
+		this.agent = agent;
 		t = Arrays.copyOf(x, x.length);
 	}
 
-	public void set(Agent a, int[] x) {
-		t[a.getID()] = Arrays.copyOf(x, x.length);
+	public void set(int[] x) {
+		t = Arrays.copyOf(x, x.length);
 	}
 
 	@Override
@@ -29,8 +30,8 @@ public class Theta {
 			String fileDirectory = Driver.directory + "/T" + ID + ".txt";
 			File file = new File(fileDirectory);
 			PrintWriter w = new PrintWriter(file);
-			for (int i = 0; i < t.length; i++)
-				w.println(Arrays.toString(t[i]));
+			w.println("Agent" + agent);
+			w.println(Arrays.toString(t));
 			w.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

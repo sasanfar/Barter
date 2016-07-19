@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.*;
 
+import ilog.cplex.IloCplex.Param;
+
 public class Driver {
 	static String directory;
 	static String modelDirectory;
@@ -36,15 +38,12 @@ public class Driver {
 
 			out.println("Number of agents= " + agentSet.size());
 			out.println("Number of resources= " + resourceSet.size());
-			out.println("Number of types per agent= "
-					+ Parameters.numberOfTypesPerAgent);
+			out.println("Number of types per agent= " + Parameters.numberOfTypesPerAgent);
 			out.println("Initilizing time = " + (end - strt) + " milliseconds");
 			System.out.println("Number of agents= " + agentSet.size());
 			System.out.println("Number of resources= " + resourceSet.size());
-			System.out.println("Number of types per agent= "
-					+ Parameters.numberOfTypesPerAgent);
-			System.out.println("Initilizing time = " + (end - strt)
-					+ " milliseconds");
+			System.out.println("Number of types per agent= " + Parameters.numberOfTypesPerAgent);
+			System.out.println("Initilizing time = " + (end - strt) + " milliseconds");
 
 			startTime = System.currentTimeMillis();
 			run();
@@ -104,7 +103,7 @@ public class Driver {
 			oldPricingObj = Arrays.copyOf(newPricingObj, thetaSet.size());
 
 			iteration++;
-//			System.gc();
+			// System.gc();
 		} while (!end && !redundantPricingObj);
 
 		System.out.println("-------------------------------------------------");
@@ -120,14 +119,12 @@ public class Driver {
 		out.flush();
 		if (redundantPricingObj) {
 			out.println("Program terminated because of redundant columns!!!");
-			System.out
-					.println("Program terminated because of redundant columns!!!");
+			System.out.println("Program terminated because of redundant columns!!!");
 		}
 
 		if (end) {
 			out.println("The end criteria for the GC algorithm was met!");
-			System.out
-					.println("The end criteria for the GC algorithm was met!");
+			System.out.println("The end criteria for the GC algorithm was met!");
 		}
 	}
 
@@ -144,7 +141,7 @@ public class Driver {
 			Resource r = new Resource();
 		}
 
-		buildThetasV3();
+		buildThetas();
 
 		buildInitialO();
 		// int[] xx = { 4, 2, 1, 1, 2 };
@@ -159,57 +156,17 @@ public class Driver {
 			}
 	}
 
-	private static void buildThetasV1() {
+	private static void buildThetas() throws FileNotFoundException {
 
-		Theta t0 = new Theta(thetaSet.size(), Parameters.t0);
-		thetaSet.add(t0);
-		Theta t1 = new Theta(thetaSet.size(), Parameters.t1);
-		thetaSet.add(t1);
-		Theta t2 = new Theta(thetaSet.size(), Parameters.t2);
-		thetaSet.add(t2);
-		Theta t3 = new Theta(thetaSet.size(), Parameters.t3);
-		thetaSet.add(t3);
-
-	}
-
-	private static void buildThetasV2() throws FileNotFoundException {
-
-		int numberOfThetas = Parameters.numberOfAgents
-				* Parameters.numberOfTypesPerAgent;
-		for (int i = 0; i < numberOfThetas; i++) {
-			int[][] x = new int[Parameters.numberOfAgents][Parameters.numberOfResources];
-			for (int j = 0; j < x.length; j++)
-				for (int k = 0; k < x[j].length; k++)
-					x[j][k] = (int) (Math.random() * Parameters.numberOfResources);
-			Theta t = new Theta(i, x);
-			thetaSet.add(t);
-			// t.print();
-		}
-
-	}
-
-	private static void buildThetasV3() {
-
-		for (Agent a : agentSet) {
+		for (int a = 0; a < Parameters.numberOfAgents; a++) {
 			for (int i = 0; i < Parameters.numberOfTypesPerAgent; i++) {
-				for (Resource r : resourceSet) {
-					a.p[i][r.getID()] = (int) (Math.random() * Parameters.numberOfResources);
-				}
+				int[] x = new int[Parameters.numberOfResources];
+				for (int j = 0; j < x.length; j++)
+					x[j] = (int) (Math.random() * Parameters.numberOfResources);
+				Theta t = new Theta(thetaSet.size(), a, x);
+				thetaSet.add(t);
+				// t.print();
 			}
-		}
-
-		int[][][] arrays = new int[agentSet.size()][Parameters.numberOfTypesPerAgent][Parameters.numberOfResources];
-
-		for (Agent a : agentSet) {
-			arrays[a.getID()] = a.p;
-		}
-
-		int[][][] t = generateCombinations(arrays);
-
-		for (int i = 0; i < t.length; i++) {
-			Theta theta = new Theta(thetaSet.size(), t[i]);
-			thetaSet.add(theta);
-			// theta.print();
 		}
 
 	}
@@ -259,7 +216,7 @@ public class Driver {
 		for (int i = 0; i < x.length; i++) {
 			int y = 0;
 			do {
-				y = (int) (Math.random() * (resourceSet.size()-1));
+				y = (int) (Math.random() * (resourceSet.size() - 1));
 			} while (y == 0);
 			x[i] = y;
 		}
@@ -276,8 +233,7 @@ public class Driver {
 
 	private static void createFiles() throws FileNotFoundException {
 		directory = "C:/Users/Sasan/workspace/Barter/Files "
-				+ (new Date()).toString().replace(' ', '_').replace(':', '-')
-						.substring(4) + "/";
+				+ (new Date()).toString().replace(' ', '_').replace(':', '-').substring(4) + "/";
 		;
 		modelDirectory = directory;
 		File file = new File(directory);
@@ -301,18 +257,14 @@ public class Driver {
 		out.flush();
 		Driver.out.println("==================================");
 		out.flush();
-		Driver.out.println("   Program was terminated in " + iteration
-				+ " iterations!");
+		Driver.out.println("   Program was terminated in " + iteration + " iterations!");
 		out.flush();
 		System.out.println("==================================");
-		System.out.println("   Program was terminated in " + iteration
-				+ " iterations!");
+		System.out.println("   Program was terminated in " + iteration + " iterations!");
 
-		Driver.out.println("Optimization execution time: "
-				+ (endTime - startTime) + " milliseconds");
+		Driver.out.println("Optimization execution time: " + (endTime - startTime) + " milliseconds");
 		out.flush();
-		System.out.println("Optimization execution time: "
-				+ (endTime - startTime) + " milliseconds");
+		System.out.println("Optimization execution time: " + (endTime - startTime) + " milliseconds");
 
 	}
 }
