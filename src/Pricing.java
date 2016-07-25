@@ -23,8 +23,7 @@ public class Pricing {
 
 			for (Agent a : Driver.agentSet) {
 				for (Resource r : Driver.resourceSet) {
-					x[a.getID()][r.getID()] = p.boolVar("x[" + a + "][" + r
-							+ "]");
+					x[a.getID()][r.getID()] = p.boolVar("x[" + a + "][" + r + "]");
 				}
 			}
 			IloLinearNumExpr expr = p.linearNumExpr();
@@ -33,35 +32,33 @@ public class Pricing {
 			expr.setConstant(-vProba);
 			for (Agent a : Driver.agentSet) {
 				for (Resource r : Driver.resourceSet) {
-					expr.addTerm(t.t[a.getID()][r.getID()],
-							x[a.getID()][r.getID()]);
+					if (t.agent == a.getID())
+						expr.addTerm(t.t[r.getID()], x[a.getID()][r.getID()]);
 				}
 			}
 
 			for (Agent a : Driver.agentSet) {
 				double u = 0;
 				for (Theta t : Driver.thetaSet) {
-					if (!t.equals(this.t)
-							&& Driver.master.ICDual.get("IC " + a + "," + t) != null) {
+					if (!t.equals(this.t) && Driver.master.ICDual.get("IC " + a + "," + t) != null) {
 						u += Driver.master.ICDual.get("IC " + a + "," + t);
 					}
 				}
 				if (Driver.master.IRDual.get("IR " + a + "," + t) != null)
 					u += Driver.master.IRDual.get("IR " + a + "," + t);
 				for (Resource r : Driver.resourceSet) {
-					expr.addTerm(u * t.t[a.getID()][r.getID()],
-							x[a.getID()][r.getID()]);
+					if (t.agent == a.getID())
+						expr.addTerm(u * t.t[r.getID()], x[a.getID()][r.getID()]);
 				}
 
 				double y = 0;
 				for (Theta t : Driver.thetaSet) {
-					if (!t.equals(this.t)
-							&& Driver.master.ICDual.get("IC " + a + "," + t) != null) {
+					if (!t.equals(this.t) && Driver.master.ICDual.get("IC " + a + "," + t) != null) {
 						y += Driver.master.ICDual.get("IC " + a + "," + t);
 					}
 					for (Resource r : Driver.resourceSet) {
-						expr.addTerm(y * t.t[a.getID()][r.getID()],
-								x[a.getID()][r.getID()]);
+						if (t.agent == a.getID())
+							expr.addTerm(y * t.t[r.getID()], x[a.getID()][r.getID()]);
 					}
 				}
 			}
@@ -74,8 +71,8 @@ public class Pricing {
 				for (Agent a : Driver.agentSet) {
 					expr.addTerm(1, x[a.getID()][r.getID()]);
 				}
-				p.addEq(expr, 1,"C1");
-			}  
+				p.addEq(expr, 1, "C1");
+			}
 
 			expr = p.linearNumExpr();
 
@@ -83,29 +80,26 @@ public class Pricing {
 			for (Resource r : Driver.resourceSet) {
 				for (Agent a1 : Driver.agentSet) {
 					for (Agent a2 : Driver.agentSet) {
-						if ((Driver.currentLocation[t.ID][r.getID()] == a1
-								.getID()) && (!a1.equals(a2))
+						if ((Driver.currentLocation[t.ID][r.getID()] == a1.getID()) && (!a1.equals(a2))
 						// && (!a1.equals(Driver.barter))
 						// && (!a2.equals(Driver.barter))
 						) {
 							expr = p.linearNumExpr();
 							expr.addTerm(1, x[a2.getID()][r.getID()]);
-							p.addEq(0, expr,"C2");
+							p.addEq(0, expr, "C2");
 						}
 					}
 				}
 			}
 
-			 p.exportModel(Driver.modelDirectory + "/Pricing_"
-			 + Driver.iteration + "," + t + ".lp");
+			p.exportModel(Driver.modelDirectory + "/Pricing_" + Driver.iteration + "," + t + ".lp");
 			if (p.solve()) {
 				obj = p.getObjValue();
 				System.out.println("Pricing solved!         ->      " + obj);
 				Driver.out.println("  Pricing" + t + " =  " + obj);
 				if (p.getObjValue() > 0) {
 					int id = buildNewOutcome();
-					System.out.println("Built Outcome        ->        Outcome"
-							+ id);
+					System.out.println("Built Outcome        ->        Outcome" + id);
 				}
 			}
 			p.end();
@@ -128,8 +122,7 @@ public class Pricing {
 		Driver.out.flush();
 		Driver.out.println("        Outcome built: " + o.getID());
 
-		Driver.currentLocation[t.getID()] = Arrays.copyOf(o.allocation,
-				o.allocation.length);
+		Driver.currentLocation[t.getID()] = Arrays.copyOf(o.allocation, o.allocation.length);
 
 		return o.getID();
 	}

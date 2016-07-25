@@ -4,6 +4,9 @@ import java.util.Arrays;
 public class Theta {
 	int agent;
 	int ID;
+	/**
+	 * The array of type profile, where the index corresponds to one particular resource
+	 */
 	int t[];
 
 	public Theta() {

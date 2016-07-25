@@ -27,19 +27,18 @@ public class Master {
 			// VARIABLES
 			for (Outcome o : Driver.outcomeSet) {
 				for (Theta t : Driver.thetaSet) {
-					o.g[t.ID] = master.numVar(0, 1, "g[" + o.getID() + "]["
-							+ t.ID + "]");
+					o.g[t.ID] = master.numVar(0, 1, "g[" + o.getID() + "][" + t.ID + "]");
 				}
 			}
 
 			// OBJECTIVE
-
 			IloLinearNumExpr expr = master.linearNumExpr();
 			for (Theta t : Driver.thetaSet) {
 				for (Outcome o : Driver.outcomeSet) {
 					for (Agent a : Driver.agentSet) {
-						if (!a.equals(Driver.barter))
-							expr.addTerm(a.U(o, t.t[a.getID()]), o.g[t.ID]);
+						// if (!a.equals(Driver.barter))
+						if (t.agent == a.getID())
+							expr.addTerm(a.U(o, t.t), o.g[t.ID]);
 					}
 				}
 			}
@@ -59,39 +58,33 @@ public class Master {
 
 			// IR
 			for (Agent a : Driver.agentSet) {
-				for (Theta t : Driver.thetaSet) {
-					expr = master.linearNumExpr();
-					for (Outcome o : Driver.outcomeSet) {
-						expr.addTerm(a.U(o, t.t[a.getID()]), o.g[t.ID]);
+				for (Theta t : Driver.thetaSet)
+					if (t.agent == a.getID()) {
+						expr = master.linearNumExpr();
+						for (Outcome o : Driver.outcomeSet) {
+							expr.addTerm(a.U(o, t.t), o.g[t.ID]);
+						}
+						IRRange.add(master.addGe(expr, a.U(Driver.init, t.t), "IR " + a + "," + t));
 					}
-					IRRange.add(master.addGe(expr,
-							a.U(Driver.init, t.t[a.getID()]), "IR " + a + ","
-									+ t));
-				}
 			}
 
 			// IC
 			for (Agent a : Driver.agentSet) {
 				for (Theta t : Driver.thetaSet)
-					if (!t.t[a.getID()].equals(Driver.thetaSet.get(0).t[a
-							.getID()])) {
-						expr = master.linearNumExpr();
-						for (Outcome o : Driver.outcomeSet) {
-							expr.addTerm(-a.U(o,
-									Driver.thetaSet.get(0).t[a.getID()]),
-									o.g[t.ID]);
+//					if (!t.t.equals(Driver.thetaSet.get(0).t))
+						if (t.agent == a.getID()) {
+							expr = master.linearNumExpr();
+							for (Outcome o : Driver.outcomeSet) {
+									expr.addTerm(-a.U(o, Driver.thetaSet.get(0).t), o.g[t.ID]);
+							}
+							for (Outcome o : Driver.outcomeSet) {
+								expr.addTerm(a.U(o, Driver.thetaSet.get(0).t), o.g[0]);
+							}
+							ICRange.add(master.addGe(expr, 0, "IC " + a + "," + t));
 						}
-						for (Outcome o : Driver.outcomeSet) {
-							expr.addTerm(
-									a.U(o, Driver.thetaSet.get(0).t[a.getID()]),
-									o.g[0]);
-						}
-						ICRange.add(master.addGe(expr, 0, "IC " + a + "," + t));
-					}
 			}
 
-			master.exportModel(Driver.modelDirectory + "/Master_"
-					+ Driver.iteration + ".lp");
+			master.exportModel(Driver.modelDirectory + "/Master_" + Driver.iteration + ".lp");
 			if (master.solve()) {
 				printSolution();
 				saveDuals();
@@ -113,9 +106,8 @@ public class Master {
 		for (Outcome o : Driver.outcomeSet) {
 			for (Theta t : Driver.thetaSet)
 				if (master.getValue(o.g[t.ID]) > 0) {
-					Driver.out.println("g[" + o.getID() + "][" + t.ID + "]= "
-							+ master.getValue(o.g[t.ID]) + "        O= "
-							+ o.getID());
+					Driver.out.println("g[" + o.getID() + "][" + t.ID + " :A" + t.agent + "]= "
+							+ master.getValue(o.g[t.ID]) + "        O= " + o.getID());
 					solution[t.ID] = o;
 				}
 		}
@@ -126,16 +118,14 @@ public class Master {
 		for (Outcome o : Driver.outcomeSet) {
 			for (Theta t : Driver.thetaSet)
 				if (master.getValue(o.g[t.ID]) > 0) {
-					System.out.println("g[" + o.getID() + "][" + t.ID + "]= "
-							+ master.getValue(o.g[t.ID]));
+					System.out.println("g[" + o.getID() + "][" + t.ID + "]= " + master.getValue(o.g[t.ID]));
 				}
 		}
 
 		System.out.println();
 
 		for (int t = 0; t < Driver.thetaSet.size(); t++)
-			Driver.currentLocation[t] = Arrays.copyOf(solution[t].allocation,
-					Parameters.numberOfResources);
+			Driver.currentLocation[t] = Arrays.copyOf(solution[t].allocation, Parameters.numberOfResources);
 		// Driver.out.println("Current locations: "
 		// + Arrays.toString(Driver.currentLocation));
 	}
@@ -206,8 +196,7 @@ public class Master {
 			// VARIABLES
 			for (Outcome o : Driver.outcomeSet) {
 				for (Theta t : Driver.thetaSet) {
-					o.g[t.ID] = master.boolVar("g[" + o.getID() + "][" + t.ID
-							+ "]");
+					o.g[t.ID] = master.boolVar("g[" + o.getID() + "][" + t.ID + "]");
 				}
 			}
 
@@ -217,7 +206,8 @@ public class Master {
 			for (Theta t : Driver.thetaSet) {
 				for (Outcome o : Driver.outcomeSet) {
 					for (Agent a : Driver.agentSet) {
-						expr.addTerm(a.U(o, t.t[a.getID()]), o.g[t.ID]);
+						if (t.agent == a.getID())
+							expr.addTerm(a.U(o, t.t), o.g[t.ID]);
 					}
 				}
 			}
@@ -237,34 +227,30 @@ public class Master {
 
 			// IR
 			for (Agent a : Driver.agentSet) {
-				for (Theta t : Driver.thetaSet) {
-					expr = master.linearNumExpr();
-					for (Outcome o : Driver.outcomeSet) {
-						expr.addTerm(a.U(o, t.t[a.getID()]), o.g[t.ID]);
+				for (Theta t : Driver.thetaSet)
+					if (t.agent == a.getID()) {
+						expr = master.linearNumExpr();
+						for (Outcome o : Driver.outcomeSet) {
+							expr.addTerm(a.U(o, t.t), o.g[t.ID]);
+						}
+						IRRange.add(master.addGe(expr, a.U(Driver.init, t.t), "IR " + a + "," + t));
 					}
-					IRRange.add(master.addGe(expr,
-							a.U(Driver.init, t.t[a.getID()]), "IR " + a + ","
-									+ t));
-				}
 			}
 
 			// IC
 			for (Agent a : Driver.agentSet) {
 				for (Theta t : Driver.thetaSet)
-					if (t.t[a.getID()] != Driver.thetaSet.get(0).t[a.getID()]) {
-						expr = master.linearNumExpr();
-						for (Outcome o : Driver.outcomeSet) {
-							expr.addTerm(-a.U(o,
-									Driver.thetaSet.get(0).t[a.getID()]),
-									o.g[t.ID]);
+					if (t.t != Driver.thetaSet.get(0).t)
+						if (t.agent == a.getID()) {
+							expr = master.linearNumExpr();
+							for (Outcome o : Driver.outcomeSet) {
+								expr.addTerm(-a.U(o, Driver.thetaSet.get(0).t), o.g[t.ID]);
+							}
+							for (Outcome o : Driver.outcomeSet) {
+								expr.addTerm(a.U(o, Driver.thetaSet.get(0).t), o.g[0]);
+							}
+							ICRange.add(master.addGe(expr, 0, "IC " + a + "," + t));
 						}
-						for (Outcome o : Driver.outcomeSet) {
-							expr.addTerm(
-									a.U(o, Driver.thetaSet.get(0).t[a.getID()]),
-									o.g[0]);
-						}
-						ICRange.add(master.addGe(expr, 0, "IC " + a + "," + t));
-					}
 			}
 
 			master.exportModel(Driver.modelDirectory + "/MIP.lp");
@@ -288,34 +274,29 @@ public class Master {
 		Outcome solution[] = new Outcome[Driver.thetaSet.size()];
 		Driver.out.flush();
 		Driver.out.println("*************************************");
-		Driver.out.println("Mixed Integer Problem objective = "
-				+ master.getObjValue());
+		Driver.out.println("Mixed Integer Problem objective = " + master.getObjValue());
 		for (Theta t : Driver.thetaSet) {
 			for (Outcome o : Driver.outcomeSet)
 				if (master.getValue(o.g[t.ID]) > 0) {
-					Driver.out.println("g[" + o.getID() + "][" + t.ID + "]= "
-							+ master.getValue(o.g[t.ID]));
+					Driver.out.println("g[" + o.getID() + "][" + t.ID + "]= " + master.getValue(o.g[t.ID]));
 					solution[t.ID] = o;
 				}
 		}
 
 		Driver.out.flush();
 		System.out.println("*************************************");
-		System.out.println("Mixed Integer Problem objective = "
-				+ master.getObjValue());
+		System.out.println("Mixed Integer Problem objective = " + master.getObjValue());
 		for (Outcome o : Driver.outcomeSet) {
 			for (Theta t : Driver.thetaSet)
 				if (master.getValue(o.g[t.ID]) > 0) {
-					System.out.println("g[" + o.getID() + "][" + t.ID + "]= "
-							+ master.getValue(o.g[t.ID]));
+					System.out.println("g[" + o.getID() + "][" + t.ID + "]= " + master.getValue(o.g[t.ID]));
 				}
 		}
 
 		System.out.println();
 
 		for (int t = 0; t < Driver.thetaSet.size(); t++)
-			Driver.currentLocation[t] = Arrays.copyOf(solution[t].allocation,
-					Parameters.numberOfResources);
+			Driver.currentLocation[t] = Arrays.copyOf(solution[t].allocation, Parameters.numberOfResources);
 		// Driver.out.println("Current locations: "
 		// + Arrays.toString(Driver.currentLocation));
 	}

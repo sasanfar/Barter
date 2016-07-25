@@ -22,8 +22,6 @@ public class Outcome {
 		ID = Driver.outcomeSet.size();
 		Driver.outcomeSet.add(this);
 		g = new IloNumVar[Driver.thetaSet.size()];
-//		for (int i = 0; i < a.length; i++)
-//			allocation[i] = a[i];
 		allocation = Arrays.copyOf(a, a.length);
 		print();
 	}
