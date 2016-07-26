@@ -278,7 +278,7 @@ public class Master {
 		for (Theta t : Driver.thetaSet) {
 			for (Outcome o : Driver.outcomeSet)
 				if (master.getValue(o.g[t.ID]) > 0) {
-					Driver.out.println("g[" + o.getID() + "][" + t.ID + "]= " + master.getValue(o.g[t.ID]));
+					Driver.out.println("g[" + o.getID() + "][" + t.ID + " :A"+t.agent+"]= " + master.getValue(o.g[t.ID]));
 					solution[t.ID] = o;
 				}
 		}

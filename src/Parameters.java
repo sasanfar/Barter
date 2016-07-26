@@ -2,9 +2,9 @@ public class Parameters {
 	/**
 	 * the agent at position 0 is always the barter, therefore the first theta!
 	 */
-	public static int numberOfAgents = 2;
-	public static int numberOfResources = 5;
-	public static int numberOfTypesPerAgent = 1;
+	public static int numberOfAgents = 10;
+	public static int numberOfResources = 50;
+	public static int numberOfTypesPerAgent = 5;
 //	public static final double M = 100000;
 	// public static int[][] thetaSet = { { -0, -0, -0, -0, -0 },
 	// { 0, 0, 4, 0, 2 }, { 0, 1, 4, 5, 0 }, { 3, 5, 1, 2, 4 },
