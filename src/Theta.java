@@ -7,20 +7,20 @@ public class Theta {
 	/**
 	 * The array of type profile, where the index corresponds to one particular resource
 	 */
-	int t[];
+	int table[];
 
 	public Theta() {
-		t = new int[Parameters.numberOfResources];
+		table = new int[Parameters.numberOfResources];
 	}
 
 	public Theta(int id, int agent, int[] x) {
 		ID = id;
 		this.agent = agent;
-		t = Arrays.copyOf(x, x.length);
+		table = Arrays.copyOf(x, x.length);
 	}
 
 	public void set(int[] x) {
-		t = Arrays.copyOf(x, x.length);
+		table = Arrays.copyOf(x, x.length);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class Theta {
 			File file = new File(fileDirectory);
 			PrintWriter w = new PrintWriter(file);
 			w.println("Agent" + agent);
-			w.println(Arrays.toString(t));
+			w.println(Arrays.toString(table));
 			w.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

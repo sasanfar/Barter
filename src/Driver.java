@@ -38,12 +38,15 @@ public class Driver {
 
 			out.println("Number of agents= " + agentSet.size());
 			out.println("Number of resources= " + resourceSet.size());
-			out.println("Number of types per agent= " + Parameters.numberOfTypesPerAgent);
+			out.println("Number of types per agent= "
+					+ Parameters.numberOfTypesPerAgent);
 			out.println("Initilizing time = " + (end - strt) + " milliseconds");
 			System.out.println("Number of agents= " + agentSet.size());
 			System.out.println("Number of resources= " + resourceSet.size());
-			System.out.println("Number of types per agent= " + Parameters.numberOfTypesPerAgent);
-			System.out.println("Initilizing time = " + (end - strt) + " milliseconds");
+			System.out.println("Number of types per agent= "
+					+ Parameters.numberOfTypesPerAgent);
+			System.out.println("Initilizing time = " + (end - strt)
+					+ " milliseconds");
 
 			startTime = System.currentTimeMillis();
 			run();
@@ -119,12 +122,14 @@ public class Driver {
 		out.flush();
 		if (redundantPricingObj) {
 			out.println("Program terminated because of redundant columns!!!");
-			System.out.println("Program terminated because of redundant columns!!!");
+			System.out
+					.println("Program terminated because of redundant columns!!!");
 		}
 
 		if (end) {
 			out.println("The end criteria for the GC algorithm was met!");
-			System.out.println("The end criteria for the GC algorithm was met!");
+			System.out
+					.println("The end criteria for the GC algorithm was met!");
 		}
 	}
 
@@ -132,7 +137,7 @@ public class Driver {
 
 		barter = new Agent();
 
-		for (int i = 0; i < Parameters.numberOfAgents; i++) {
+		for (int i = 0; i < Parameters.numberOfAgents-1; i++) {
 			Agent a = new Agent();
 			// a.setT(a.getID());
 		}
@@ -157,21 +162,25 @@ public class Driver {
 	}
 
 	private static void buildThetas() throws FileNotFoundException {
-
-		for (int a = 0; a < Parameters.numberOfAgents; a++) {
+		for (Agent a: agentSet) {
+			boolean truthSelected = false;
 			for (int i = 0; i < Parameters.numberOfTypesPerAgent; i++) {
 				int[] x = new int[Parameters.numberOfResources];
 				for (int j = 0; j < x.length; j++)
 					x[j] = (int) (Math.random() * Parameters.numberOfResources);
-				Theta t = new Theta(thetaSet.size(), a, x);
+				Theta t = new Theta(thetaSet.size(), a.getID(), x);
 				thetaSet.add(t);
-				// t.print();
+				if (!truthSelected && Math.random() > 0.5) {
+					truthSelected = true;
+					agentSet.get(a.getID()).setTruth(t.getID());
+				}
+				if (!truthSelected && i == Parameters.numberOfTypesPerAgent - 1) {
+					truthSelected = true;
+					agentSet.get(a.getID()).setTruth(t.getID());
+				}
 			}
 		}
-
 	}
-
-	
 
 	private static void buildInitialO() {
 		// init = new Outcome(Parameters.startingLocations);
@@ -198,7 +207,8 @@ public class Driver {
 
 	private static void createFiles() throws FileNotFoundException {
 		directory = "C:/Users/Sasan/workspace/Barter/Files "
-				+ (new Date()).toString().replace(' ', '_').replace(':', '-').substring(4) + "/";
+				+ (new Date()).toString().replace(' ', '_').replace(':', '-')
+						.substring(4) + "/";
 		;
 		modelDirectory = directory;
 		File file = new File(directory);
@@ -222,14 +232,18 @@ public class Driver {
 		out.flush();
 		Driver.out.println("==================================");
 		out.flush();
-		Driver.out.println("   Program was terminated in " + iteration + " iterations!");
+		Driver.out.println("   Program was terminated in " + iteration
+				+ " iterations!");
 		out.flush();
 		System.out.println("==================================");
-		System.out.println("   Program was terminated in " + iteration + " iterations!");
+		System.out.println("   Program was terminated in " + iteration
+				+ " iterations!");
 
-		Driver.out.println("Optimization execution time: " + (endTime - startTime) + " milliseconds");
+		Driver.out.println("Optimization execution time: "
+				+ (endTime - startTime) + " milliseconds");
 		out.flush();
-		System.out.println("Optimization execution time: " + (endTime - startTime) + " milliseconds");
+		System.out.println("Optimization execution time: "
+				+ (endTime - startTime) + " milliseconds");
 
 	}
 }

@@ -21,19 +21,21 @@ public class Pricing {
 			p = new IloCplex();
 			x = new IloIntVar[Parameters.numberOfAgents + 1][Parameters.numberOfResources];
 
+			
 			for (Agent a : Driver.agentSet) {
 				for (Resource r : Driver.resourceSet) {
 					x[a.getID()][r.getID()] = p.boolVar("x[" + a + "][" + r + "]");
 				}
 			}
 			IloLinearNumExpr expr = p.linearNumExpr();
-
+			
+			//u_a^{r,\theta} = t.t[r.getID()] when t \in \Theta_a
 			double vProba = Driver.master.ProbaDual.get("Proba " + t);
 			expr.setConstant(-vProba);
 			for (Agent a : Driver.agentSet) {
 				for (Resource r : Driver.resourceSet) {
 					if (t.agent == a.getID())
-						expr.addTerm(t.t[r.getID()], x[a.getID()][r.getID()]);
+						expr.addTerm(t.table[r.getID()], x[a.getID()][r.getID()]);
 				}
 			}
 
@@ -48,7 +50,7 @@ public class Pricing {
 					u += Driver.master.IRDual.get("IR " + a + "," + t);
 				for (Resource r : Driver.resourceSet) {
 					if (t.agent == a.getID())
-						expr.addTerm(u * t.t[r.getID()], x[a.getID()][r.getID()]);
+						expr.addTerm(u * t.table[r.getID()], x[a.getID()][r.getID()]);
 				}
 
 				double y = 0;
@@ -58,7 +60,7 @@ public class Pricing {
 					}
 					for (Resource r : Driver.resourceSet) {
 						if (t.agent == a.getID())
-							expr.addTerm(y * t.t[r.getID()], x[a.getID()][r.getID()]);
+							expr.addTerm(y * t.table[r.getID()], x[a.getID()][r.getID()]);
 					}
 				}
 			}

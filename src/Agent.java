@@ -1,12 +1,17 @@
 public class Agent {
 
 	private int ID;
-//	private int t;
-	public int[][] p;
+	private int truth;
+	
+	public void setTruth(int t){
+		truth = t;
+	}
+	public int getTruth(){
+		return truth;
+	}
 
 	public Agent() {
 		ID = Driver.agentSet.size();
-		p = new int[Parameters.numberOfTypesPerAgent][Parameters.numberOfResources];
 
 		Driver.agentSet.add(this);
 	}
@@ -26,14 +31,6 @@ public class Agent {
 	public int getID() {
 		return ID;
 	}
-
-//	public int t() {
-//		return t;
-//	}
-//
-//	public void setT(int p) {
-//		t = p;
-//	}
 
 	public int U(Outcome o, int[] t) {
 		int u = 0;
