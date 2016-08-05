@@ -39,12 +39,12 @@ public class Driver {
 			out.println("Number of agents= " + agentSet.size());
 			out.println("Number of resources= " + resourceSet.size());
 			out.println("Number of types per agent= "
-					+ Parameters.numberOfTypesPerAgent);
+					+ Parameters.TYPES_AGENT);
 			out.println("Initilizing time = " + (end - strt) + " milliseconds");
 			System.out.println("Number of agents= " + agentSet.size());
 			System.out.println("Number of resources= " + resourceSet.size());
 			System.out.println("Number of types per agent= "
-					+ Parameters.numberOfTypesPerAgent);
+					+ Parameters.TYPES_AGENT);
 			System.out.println("Initilizing time = " + (end - strt)
 					+ " milliseconds");
 
@@ -137,12 +137,12 @@ public class Driver {
 
 		barter = new Agent();
 
-		for (int i = 0; i < Parameters.numberOfAgents-1; i++) {
+		for (int i = 0; i < Parameters.AGENTS-1; i++) {
 			Agent a = new Agent();
 			// a.setT(a.getID());
 		}
 
-		for (int i = 0; i < Parameters.numberOfResources; i++) {
+		for (int i = 0; i < Parameters.RESOURCES; i++) {
 			Resource r = new Resource();
 		}
 
@@ -154,7 +154,7 @@ public class Driver {
 
 		buildExtraOutcome();
 
-		currentLocation = new int[thetaSet.size()][Parameters.numberOfResources];
+		currentLocation = new int[thetaSet.size()][Parameters.RESOURCES];
 		for (int t = 0; t < thetaSet.size(); t++)
 			for (int r = 0; r < resourceSet.size(); r++) {
 				currentLocation[t][r] = init.allocation[r];
@@ -164,17 +164,17 @@ public class Driver {
 	private static void buildThetas() throws FileNotFoundException {
 		for (Agent a: agentSet) {
 			boolean truthSelected = false;
-			for (int i = 0; i < Parameters.numberOfTypesPerAgent; i++) {
-				int[] x = new int[Parameters.numberOfResources];
+			for (int i = 0; i < Parameters.TYPES_AGENT; i++) {
+				int[] x = new int[Parameters.RESOURCES];
 				for (int j = 0; j < x.length; j++)
-					x[j] = (int) (Math.random() * Parameters.numberOfResources);
+					x[j] = (int) (Math.random() * Parameters.RESOURCES);
 				Theta t = new Theta(thetaSet.size(), a.getID(), x);
 				thetaSet.add(t);
 				if (!truthSelected && Math.random() > 0.5) {
 					truthSelected = true;
 					agentSet.get(a.getID()).setTruth(t.getID());
 				}
-				if (!truthSelected && i == Parameters.numberOfTypesPerAgent - 1) {
+				if (!truthSelected && i == Parameters.TYPES_AGENT - 1) {
 					truthSelected = true;
 					agentSet.get(a.getID()).setTruth(t.getID());
 				}
@@ -185,7 +185,7 @@ public class Driver {
 	private static void buildInitialO() {
 		// init = new Outcome(Parameters.startingLocations);
 
-		int[] x = new int[Parameters.numberOfResources];
+		int[] x = new int[Parameters.RESOURCES];
 
 		for (int i = 0; i < x.length; i++) {
 			int y = 0;
@@ -198,9 +198,9 @@ public class Driver {
 	}
 
 	private static void buildExtraOutcome() {
-		int[] x = new int[Parameters.numberOfResources];
+		int[] x = new int[Parameters.RESOURCES];
 		for (int i = 0; i < x.length; i++) {
-			x[i] = (int) (Math.random() * Parameters.numberOfAgents);
+			x[i] = (int) (Math.random() * Parameters.AGENTS);
 		}
 		Outcome o = new Outcome(x);
 	}

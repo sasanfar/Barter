@@ -69,22 +69,43 @@ public class Master {
 								a.U(Driver.init, t.table), "IR " + a + "," + t));
 					}
 			}
+			
+			// IR Ex-Post
+			for (Agent a : Driver.agentSet) {
+				for (Theta t : Driver.thetaSet) {
+					for (Outcome o : Driver.outcomeSet) {
+						expr = master.linearNumExpr();
+						expr.addTerm(
+								a.U(o, t.table) - a.U(Driver.init, t.table),
+								o.g[t.ID]);
+						master.addGe(expr, 0);
+					}
+				}
+			}
 
 			// IC
 			for (Agent a : Driver.agentSet) {
 				for (Theta t : Driver.thetaSet)
-					if (t.ID != a.getTruth())
-						if (t.agent == a.getID()) {
-							expr = master.linearNumExpr();
-							for (Outcome o : Driver.outcomeSet) {
-								expr.addTerm(-1* a.U(o, Driver.thetaSet.get(a.getTruth()).table),										o.g[t.ID]);
-							}
-							for (Outcome o : Driver.outcomeSet) {
-								expr.addTerm(a.U(o,Driver.thetaSet.get(a.getTruth()).table),o.g[a.getTruth()]);
-							}
-							ICRange.add(master.addGe(expr, 0, "IC " + a + ","
-									+ t));
+					if (t.agent == a.getID() && t.ID != a.getTruth()) {
+						expr = master.linearNumExpr();
+						for (Outcome o : Driver.outcomeSet) { // left hand side
+																// of the
+																// equation
+							expr.addTerm(
+									-1
+											* a.U(o, Driver.thetaSet.get(a
+													.getTruth()).table),
+									o.g[t.ID]);
 						}
+						for (Outcome o : Driver.outcomeSet) {// right hand side
+																// of the
+																// equation
+							expr.addTerm(a.U(o,
+									Driver.thetaSet.get(a.getTruth()).table),
+									o.g[a.getTruth()]);
+						}
+						ICRange.add(master.addGe(expr, 0, "IC " + a + "," + t));
+					}
 			}
 
 			master.exportModel(Driver.modelDirectory + "/Master_"
@@ -132,7 +153,7 @@ public class Master {
 
 		for (int t = 0; t < Driver.thetaSet.size(); t++)
 			Driver.currentLocation[t] = Arrays.copyOf(solution[t].allocation,
-					Parameters.numberOfResources);
+					Parameters.RESOURCES);
 		// Driver.out.println("Current locations: "
 		// + Arrays.toString(Driver.currentLocation));
 	}
@@ -316,7 +337,7 @@ public class Master {
 
 		for (int t = 0; t < Driver.thetaSet.size(); t++)
 			Driver.currentLocation[t] = Arrays.copyOf(solution[t].allocation,
-					Parameters.numberOfResources);
+					Parameters.RESOURCES);
 		// Driver.out.println("Current locations: "
 		// + Arrays.toString(Driver.currentLocation));
 	}

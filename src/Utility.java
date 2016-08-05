@@ -9,7 +9,7 @@ public class Utility {
 			num *= arrays[i].length;
 		}
 
-		int[][][] result = new int[num][arrays.length][Parameters.numberOfResources];
+		int[][][] result = new int[num][arrays.length][Parameters.RESOURCES];
 
 		// array containing the indices of the Strings
 		int[] combination = new int[arrays.length];

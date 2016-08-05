@@ -10,7 +10,7 @@ public class Theta {
 	int table[];
 
 	public Theta() {
-		table = new int[Parameters.numberOfResources];
+		table = new int[Parameters.RESOURCES];
 	}
 
 	public Theta(int id, int agent, int[] x) {

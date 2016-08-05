@@ -19,7 +19,7 @@ public class Pricing {
 	public void solve() {
 		try {
 			p = new IloCplex();
-			x = new IloIntVar[Parameters.numberOfAgents + 1][Parameters.numberOfResources];
+			x = new IloIntVar[Parameters.AGENTS + 1][Parameters.RESOURCES];
 
 			
 			for (Agent a : Driver.agentSet) {
@@ -112,9 +112,9 @@ public class Pricing {
 
 	private int buildNewOutcome() throws UnknownObjectException, IloException {
 
-		int[] locations = new int[Parameters.numberOfResources];
-		for (int r = 0; r < Parameters.numberOfResources; r++) {
-			for (int a = 0; a < Parameters.numberOfAgents; a++) {
+		int[] locations = new int[Parameters.RESOURCES];
+		for (int r = 0; r < Parameters.RESOURCES; r++) {
+			for (int a = 0; a < Parameters.AGENTS; a++) {
 				if (p.getValue(x[a][r]) == 1) {
 					locations[r] = a;
 				}
