@@ -70,18 +70,18 @@ public class Master {
 					}
 			}
 			
-			// IR Ex-Post
-			for (Agent a : Driver.agentSet) {
-				for (Theta t : Driver.thetaSet) {
-					for (Outcome o : Driver.outcomeSet) {
-						expr = master.linearNumExpr();
-						expr.addTerm(
-								a.U(o, t.table) - a.U(Driver.init, t.table),
-								o.g[t.ID]);
-						master.addGe(expr, 0);
-					}
-				}
-			}
+//			// IR Ex-Post
+//			for (Agent a : Driver.agentSet) {
+//				for (Theta t : Driver.thetaSet) {
+//					for (Outcome o : Driver.outcomeSet) {
+//						expr = master.linearNumExpr();
+//						expr.addTerm(
+//								a.U(o, t.table) - a.U(Driver.init, t.table),
+//								o.g[t.ID]);
+//						master.addGe(expr, 0);
+//					}
+//				}
+//			}
 
 			// IC
 			for (Agent a : Driver.agentSet) {
@@ -254,19 +254,31 @@ public class Master {
 				ProbaRange.add(master.addEq(1, expr, "Proba " + t));
 			}
 
-			// IR
-			for (Agent a : Driver.agentSet) {
-				for (Theta t : Driver.thetaSet)
-					if (t.agent == a.getID()) {
-						expr = master.linearNumExpr();
-						for (Outcome o : Driver.outcomeSet) {
-							expr.addTerm(a.U(o, t.table), o.g[t.ID]);
+//			// IR
+//			for (Agent a : Driver.agentSet) {
+//				for (Theta t : Driver.thetaSet)
+//					if (t.agent == a.getID()) {
+//						expr = master.linearNumExpr();
+//						for (Outcome o : Driver.outcomeSet) {
+//							expr.addTerm(a.U(o, t.table), o.g[t.ID]);
+//						}
+//						IRRange.add(master.addGe(expr,
+//								a.U(Driver.init, t.table), "IR " + a + "," + t));
+//					}
+//			}
+			
+			// IR Ex-Post
+						for (Agent a : Driver.agentSet) {
+							for (Theta t : Driver.thetaSet) {
+								for (Outcome o : Driver.outcomeSet) {
+									expr = master.linearNumExpr();
+									expr.addTerm(
+											a.U(o, t.table) - a.U(Driver.init, t.table),
+											o.g[t.ID]);
+									master.addGe(expr, 0);
+								}
+							}
 						}
-						IRRange.add(master.addGe(expr,
-								a.U(Driver.init, t.table), "IR " + a + "," + t));
-					}
-			}
-
 			// IC
 			for (Agent a : Driver.agentSet) {
 				for (Theta t : Driver.thetaSet)

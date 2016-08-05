@@ -38,8 +38,7 @@ public class Driver {
 
 			out.println("Number of agents= " + agentSet.size());
 			out.println("Number of resources= " + resourceSet.size());
-			out.println("Number of types per agent= "
-					+ Parameters.TYPES_AGENT);
+			out.println("Number of types per agent= " + Parameters.TYPES_AGENT);
 			out.println("Initilizing time = " + (end - strt) + " milliseconds");
 			System.out.println("Number of agents= " + agentSet.size());
 			System.out.println("Number of resources= " + resourceSet.size());
@@ -137,7 +136,7 @@ public class Driver {
 
 		barter = new Agent();
 
-		for (int i = 0; i < Parameters.AGENTS-1; i++) {
+		for (int i = 0; i < Parameters.AGENTS - 1; i++) {
 			Agent a = new Agent();
 			// a.setT(a.getID());
 		}
@@ -162,7 +161,7 @@ public class Driver {
 	}
 
 	private static void buildThetas() throws FileNotFoundException {
-		for (Agent a: agentSet) {
+		for (Agent a : agentSet) {
 			boolean truthSelected = false;
 			for (int i = 0; i < Parameters.TYPES_AGENT; i++) {
 				int[] x = new int[Parameters.RESOURCES];
@@ -180,6 +179,7 @@ public class Driver {
 				}
 			}
 		}
+
 	}
 
 	private static void buildInitialO() {
@@ -194,6 +194,7 @@ public class Driver {
 			} while (y == 0);
 			x[i] = y;
 		}
+
 		init = new Outcome(x);
 	}
 
