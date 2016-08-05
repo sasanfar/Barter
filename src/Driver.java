@@ -161,49 +161,49 @@ public class Driver {
 	}
 
 	private static void buildThetas() throws FileNotFoundException {
-		for (Agent a : agentSet) {
-			boolean truthSelected = false;
-			for (int i = 0; i < Parameters.TYPES_AGENT; i++) {
-				int[] x = new int[Parameters.RESOURCES];
-				for (int j = 0; j < x.length; j++)
-					x[j] = (int) (Math.random() * Parameters.RESOURCES);
-				Theta t = new Theta(thetaSet.size(), a.getID(), x);
-				thetaSet.add(t);
-				if (!truthSelected && Math.random() > 0.5) {
-					truthSelected = true;
-					agentSet.get(a.getID()).setTruth(t.getID());
-				}
-				if (!truthSelected && i == Parameters.TYPES_AGENT - 1) {
-					truthSelected = true;
-					agentSet.get(a.getID()).setTruth(t.getID());
-				}
-			}
-		}
+
+		int[] x = { 2, 1, 1, 2 };
+		Theta t1 = new Theta(thetaSet.size(), 0, x);
+		thetaSet.add(t1);
+		agentSet.get(0).setTruth(t1.getID());
+
+		int[] y = { 1, 3, 2, 0 };
+		Theta t2 = new Theta(thetaSet.size(), 1, y);
+		thetaSet.add(t2);
+		agentSet.get(1).setTruth(t2.getID());
+
+		int[] z = { 4, 0, 3, 1 };
+		Theta t3 = new Theta(thetaSet.size(), 2, z);
+		thetaSet.add(t3);
+		agentSet.get(2).setTruth(t3.getID());
+		
+		
+		int[] w = {0,0,0,0};
+
+		Theta t4 = new Theta(thetaSet.size(), 0, w);
+		thetaSet.add(t4);
+		Theta t5 = new Theta(thetaSet.size(), 1, w);
+		thetaSet.add(t5);
+		Theta t6 = new Theta(thetaSet.size(), 2, w);
+		thetaSet.add(t6);
+		
 
 	}
 
 	private static void buildInitialO() {
 		// init = new Outcome(Parameters.startingLocations);
 
-		int[] x = new int[Parameters.RESOURCES];
-
-		for (int i = 0; i < x.length; i++) {
-			int y = 0;
-			do {
-				y = (int) (Math.random() * (resourceSet.size() - 1));
-			} while (y == 0);
-			x[i] = y;
-		}
+		int[] x = { 1, 2, 2, 0 };
 
 		init = new Outcome(x);
 	}
 
 	private static void buildExtraOutcome() {
-		int[] x = new int[Parameters.RESOURCES];
-		for (int i = 0; i < x.length; i++) {
-			x[i] = (int) (Math.random() * Parameters.AGENTS);
-		}
-		Outcome o = new Outcome(x);
+		int[] y = { 2, 1, 2, 0 };
+		Outcome o = new Outcome(y);
+
+		int[] x = { 0, 0, 2, 0 };
+		Outcome o_m = new Outcome(x);
 	}
 
 	private static void createFiles() throws FileNotFoundException {

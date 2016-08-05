@@ -1,0 +1,91 @@
+Number of agents= 3
+Number of resources= 4
+Number of types per agent= 1
+Initilizing time = 5 milliseconds
+
+-------------------------------------------------
+Iteration: 0
+*************************************
+Master objective = 15.0
+g[0][3 :A0]= 1.0        O= 0
+g[0][5 :A2]= 1.0        O= 0
+g[1][1 :A1]= 1.0        O= 1
+g[1][2 :A2]= 1.0        O= 1
+g[2][0 :A0]= 1.0        O= 2
+g[2][4 :A1]= 1.0        O= 2
+
+Proba Duals:
+Proba Theta0: 2.0      Proba Theta1: 1.0      Proba Theta2: 3.0      Proba Theta3: 0.0      Proba Theta4: -0.0      Proba Theta5: 0.0      
+
+IC Duals:
+IC A0,Theta3: 0.0      IC A1,Theta4: 0.0      IC A2,Theta5: 0.0      
+
+====================================
+||  All IC dual values are zero!  ||
+====================================
+
+IR Duals:
+IR A0,Theta0: 0.0      IR A0,Theta3: 0.0      IR A1,Theta1: 0.0      IR A1,Theta4: 0.0      IR A2,Theta2: 0.0      IR A2,Theta5: 0.0      
+
+====================================
+||  All IR dual values are zero!  ||
+====================================
+
+  PricingTheta0 =  3.0
+        Outcome built: 3
+  PricingTheta1 =  2.0
+        Outcome built: 4
+  PricingTheta2 =  4.0
+        Outcome built: 5
+  PricingTheta3 =  0.0
+  PricingTheta4 =  0.0
+  PricingTheta5 =  0.0
+
+-------------------------------------------------
+Iteration: 1
+*************************************
+Master objective = 15.0
+g[0][3 :A0]= 1.0        O= 0
+g[0][5 :A2]= 1.0        O= 0
+g[1][1 :A1]= 1.0        O= 1
+g[1][2 :A2]= 1.0        O= 1
+g[2][0 :A0]= 1.0        O= 2
+g[2][4 :A1]= 1.0        O= 2
+
+Proba Duals:
+Proba Theta0: 5.0      Proba Theta1: 3.0      Proba Theta2: 7.0      Proba Theta3: 0.0      Proba Theta4: -0.0      Proba Theta5: 0.0      
+
+IC Duals:
+IC A0,Theta3: 0.0      IC A1,Theta4: 0.0      IC A2,Theta5: 0.0      
+
+====================================
+||  All IC dual values are zero!  ||
+====================================
+
+IR Duals:
+IR A0,Theta0: 0.0      IR A0,Theta3: 0.0      IR A1,Theta1: 0.0      IR A1,Theta4: 0.0      IR A2,Theta2: 0.0      IR A2,Theta5: 0.0      
+
+====================================
+||  All IR dual values are zero!  ||
+====================================
+
+  PricingTheta0 =  0.0
+  PricingTheta1 =  0.0
+  PricingTheta2 =  0.0
+  PricingTheta3 =  0.0
+  PricingTheta4 =  0.0
+  PricingTheta5 =  0.0
+-------------------------------------------------
+Mixed Integer Problem
+*************************************
+Mixed Integer Problem objective = 6.0
+g[0][0 :A0]= 1.0
+g[0][1 :A1]= 1.0
+g[0][2 :A2]= 1.0
+g[0][3 :A0]= 1.0
+g[0][4 :A1]= 1.0
+g[0][5 :A2]= 1.0
+The end criteria for the GC algorithm was met!
+==================================
+   Program was terminated in 2 iterations!
+Optimization execution time: 138 milliseconds
