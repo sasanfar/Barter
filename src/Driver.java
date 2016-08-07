@@ -176,9 +176,8 @@ public class Driver {
 		Theta t3 = new Theta(thetaSet.size(), 2, z);
 		thetaSet.add(t3);
 		agentSet.get(2).setTruth(t3.getID());
-		
-		
-		int[] w = {0,0,0,0};
+
+		int[] w = { 0, 0, 0, 0 };
 
 		Theta t4 = new Theta(thetaSet.size(), 0, w);
 		thetaSet.add(t4);
@@ -186,7 +185,6 @@ public class Driver {
 		thetaSet.add(t5);
 		Theta t6 = new Theta(thetaSet.size(), 2, w);
 		thetaSet.add(t6);
-		
 
 	}
 
