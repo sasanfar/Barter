@@ -13,7 +13,7 @@ public class Driver {
 	static Master master;
 	static Pricing pricing;
 
-	static public int currentLocation[][];
+	static public int currentLocation[];
 
 	public static List<Agent> agentSet = new ArrayList<Agent>();
 	public static List<Resource> resourceSet = new ArrayList<Resource>();
@@ -23,8 +23,8 @@ public class Driver {
 
 	public static int iteration = 0;
 
-	static double[] oldPricingObj;
-	static double[] newPricingObj;
+	// static double[] oldPricingObj;
+	// static double[] newPricingObj;
 
 	static long startTime;
 	static long endTime;
@@ -66,8 +66,8 @@ public class Driver {
 	private static void run() {
 		boolean end = true;
 		boolean redundantPricingObj = false;
-		oldPricingObj = new double[thetaSet.size()];
-		newPricingObj = new double[thetaSet.size()];
+		// oldPricingObj = new double[thetaSet.size()];
+		// newPricingObj = new double[thetaSet.size()];
 		do {
 			end = true;
 			redundantPricingObj = true;
@@ -87,22 +87,30 @@ public class Driver {
 			for (Theta theta : thetaSet) {
 				pricing = new Pricing(theta);
 				pricing.solve();
-				newPricingObj[theta.ID] = pricing.obj;
-			}
-
-			for (double d : newPricingObj) {
-				if (d > 0)
+				// newPricingObj[theta.ID] = pricing.obj;
+				if (pricing.obj > 0) {
 					end = false;
+					currentLocation = Arrays.copyOf(
+							outcomeSet.get(outcomeSet.size() - 1).allocation,
+							Parameters.RESOURCES);
+					break;
+				} else if (theta.equals(thetaSet.get(thetaSet.size() - 1)))
+					end = true;
 			}
 
-			for (int i = 0; i < thetaSet.size(); i++) {
-				Double d1 = newPricingObj[i];
-				Double d2 = oldPricingObj[i];
-				if (!d1.equals(d2))
-					redundantPricingObj = false;
-			}
+			// for (double d : newPricingObj) {
+			// if (d > 0)
+			// end = false;
+			// }
 
-			oldPricingObj = Arrays.copyOf(newPricingObj, thetaSet.size());
+			// for (int i = 0; i < thetaSet.size(); i++) {
+			// Double d1 = newPricingObj[i];
+			// Double d2 = oldPricingObj[i];
+			// if (!d1.equals(d2))
+			redundantPricingObj = false;
+			// }
+
+			// oldPricingObj = Arrays.copyOf(newPricingObj, thetaSet.size());
 
 			iteration++;
 			// System.gc();
@@ -151,13 +159,12 @@ public class Driver {
 		// int[] xx = { 4, 2, 1, 1, 2 };
 		// Outcome o = new Outcome(xx);
 
-		buildExtraOutcome();
+		// buildExtraOutcome();
 
-		currentLocation = new int[thetaSet.size()][Parameters.RESOURCES];
-		for (int t = 0; t < thetaSet.size(); t++)
-			for (int r = 0; r < resourceSet.size(); r++) {
-				currentLocation[t][r] = init.allocation[r];
-			}
+		currentLocation = new int[Parameters.RESOURCES];
+		for (int r = 0; r < resourceSet.size(); r++) {
+			currentLocation[r] = init.allocation[r];
+		}
 	}
 
 	private static void buildThetas() throws FileNotFoundException {

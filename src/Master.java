@@ -151,9 +151,6 @@ public class Master {
 
 		System.out.println();
 
-		for (int t = 0; t < Driver.thetaSet.size(); t++)
-			Driver.currentLocation[t] = Arrays.copyOf(solution[t].allocation,
-					Parameters.RESOURCES);
 		// Driver.out.println("Current locations: "
 		// + Arrays.toString(Driver.currentLocation));
 	}
@@ -255,30 +252,30 @@ public class Master {
 			}
 
 //			// IR
-//			for (Agent a : Driver.agentSet) {
-//				for (Theta t : Driver.thetaSet)
-//					if (t.agent == a.getID()) {
-//						expr = master.linearNumExpr();
-//						for (Outcome o : Driver.outcomeSet) {
-//							expr.addTerm(a.U(o, t.table), o.g[t.ID]);
-//						}
-//						IRRange.add(master.addGe(expr,
-//								a.U(Driver.init, t.table), "IR " + a + "," + t));
-//					}
-//			}
-			
-			// IR Ex-Post
-						for (Agent a : Driver.agentSet) {
-							for (Theta t : Driver.thetaSet) {
-								for (Outcome o : Driver.outcomeSet) {
-									expr = master.linearNumExpr();
-									expr.addTerm(
-											a.U(o, t.table) - a.U(Driver.init, t.table),
-											o.g[t.ID]);
-									master.addGe(expr, 0);
-								}
-							}
+			for (Agent a : Driver.agentSet) {
+				for (Theta t : Driver.thetaSet)
+					if (t.agent == a.getID()) {
+						expr = master.linearNumExpr();
+						for (Outcome o : Driver.outcomeSet) {
+							expr.addTerm(a.U(o, t.table), o.g[t.ID]);
 						}
+						IRRange.add(master.addGe(expr,
+								a.U(Driver.init, t.table), "IR " + a + "," + t));
+					}
+			}
+			
+//			// IR Ex-Post
+//						for (Agent a : Driver.agentSet) {
+//							for (Theta t : Driver.thetaSet) {
+//								for (Outcome o : Driver.outcomeSet) {
+//									expr = master.linearNumExpr();
+//									expr.addTerm(
+//											a.U(o, t.table) - a.U(Driver.init, t.table),
+//											o.g[t.ID]);
+//									master.addGe(expr, 0);
+//								}
+//							}
+//						}
 			// IC
 			for (Agent a : Driver.agentSet) {
 				for (Theta t : Driver.thetaSet)
@@ -347,9 +344,7 @@ public class Master {
 
 		System.out.println();
 
-		for (int t = 0; t < Driver.thetaSet.size(); t++)
-			Driver.currentLocation[t] = Arrays.copyOf(solution[t].allocation,
-					Parameters.RESOURCES);
+		
 		// Driver.out.println("Current locations: "
 		// + Arrays.toString(Driver.currentLocation));
 	}
